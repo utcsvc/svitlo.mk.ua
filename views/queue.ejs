@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Черга <%= queueName %> — графік відключень</title>
+  <meta name="description" content="Графік відключень електроенергії для черги <%= queueName %> у Миколаївській області.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css?v=1">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="topbar">
+        <a class="brand" href="/">
+          <span class="logo" aria-hidden="true"></span>
+          <b>Відключення світла</b>
+        </a>
+        <div class="region-pill">
+          <span class="region-dot" aria-hidden="true"></span>
+          <span><%= regionTag %></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script defer src="/queue.js"></script>
+
+    <div class="container">
+      <div class="qhead">
+        <h1>Черга <%= queueName %> — <%= regionTitle %></h1>
+        <a class="back" href="/">← На головну</a>
+      </div>
+
+      <div class="kpi">
+        <span class="pill">Сьогодні світло: <b>+<%= today.onLabel.replace(' год.', '') %> год.</b></span>
+        <span class="pill">Сьогодні без світла: <b>-<%= today.offLabel.replace(' год.', '') %> год.</b></span>
+      </div>
+
+      <section class="panel">
+        <div class="panel__head">
+          <h2>Графік</h2>
+          <div class="tabs" role="tablist" aria-label="День">
+            <button class="tab is-active" id="today" type="button">Сьогодні</button>
+          </div>
+        </div>
+
+        <div class="panel__body">
+          <div id="todayPane">
+            <div class="progress"
+                 id="powerProgress"
+                 data-mode="<%= powerProgress.mode %>"
+                 data-from="<%= powerProgress.from %>"
+                 data-to="<%= powerProgress.to %>"
+                 data-label="<%= powerProgress.label %>">
+              <div class="progress__top">
+                <span class="title" id="ppTitle"><%= powerProgress.label %></span>
+                <span class="badge" id="ppRemaining">—</span>
+              </div>
+              <div class="bar"><div id="ppFill" style="width:0%"></div></div>
+              <div class="progress__bottom">
+                <span id="ppLeft">—</span>
+                <span id="ppRight">—</span>
+              </div>
+            </div>
+
+            <% if (!today.list || today.list.length === 0) { %>
+              <div class="msg is-ok" style="margin-top:12px;">
+                <strong>Світло весь день.</strong> Відключень сьогодні немає.
+              </div>
+            <% } else { %>
+              <div class="timeline">
+                <% today.list.forEach(item => { %>
+                  <div class="slot <%= (today.currentScheduleKey === (item.startMin + '-' + item.endMin)) ? 'is-next' : '' %>">
+                    <div class="t">
+                      <span class="badge is-off">Відключення</span>
+                      <b><%= item.from %> — <%= item.to %></b>
+                      <% if (item.from === '00:00' || item.to === '00:00') { %>
+                        <span class="badge is-midnight">00:00 (опівніч) — відключення</span>
+                      <% } %>
+                    </div>
+                    <span class="badge">Тривалість: <b><%= item.duration %></b></span>
+                  </div>
+                <% }) %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <span>Дані: <a href="https://off.energy.mk.ua" target="_blank" rel="noreferrer">off.energy.mk.ua</a></span>
+        <a href="/about.html">Контакти</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

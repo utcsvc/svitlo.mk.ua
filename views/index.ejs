@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Відключення світла — <%= regionTitle %></title>
+  <meta name="description" content="Графіки відключення світла у <%= regionTitle %> — черги та пошук по адресі.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css?v=1">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="topbar">
+        <a class="brand" href="/">
+          <span class="logo" aria-hidden="true"></span>
+          <b>Відключення світла</b>
+        </a>
+        <div class="region-pill" title="Регіон">
+          <span class="region-dot" aria-hidden="true"></span>
+          <span><%= regionTag %></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>
+    <script defer src="/index.js"></script>
+
+    <div class="container">
+      <div class="hero">
+        <h1><%= regionTitle %></h1>
+        <p>Оберіть вашу чергу або введіть адресу — сервіс підтягує дані з <a href="https://off.energy.mk.ua" target="_blank" rel="noreferrer">off.energy.mk.ua</a>.</p>
+      </div>
+
+      <div class="grid">
+        <section class="card">
+          <div class="card__head">
+            <h2>Пошук</h2>
+            <div class="tabs" role="tablist" aria-label="Пошук">
+              <button class="tab is-active" id="tab-queue" type="button" role="tab">Черга</button>
+              <button class="tab" id="tab-address" type="button" role="tab">Адреса</button>
+            </div>
+          </div>
+          <div class="card__body">
+            <div id="pane-queue">
+              <div class="queue-grid">
+                <% queues.forEach(q => { %>
+                  <a class="queue-btn" href="/queue/<%= q.slug %>" aria-label="Черга <%= q.name %>"><%= q.name %></a>
+                <% }) %>
+              </div>
+            </div>
+
+            <div id="pane-address" style="display:none;">
+              <div class="form">
+                <div class="field">
+                  <label for="city">Населений пункт</label>
+                  <input class="input" type="text" name="city" id="city" placeholder="Напр. м. Миколаїв" autocomplete="off">
+                </div>
+                <div class="field is-locked">
+                  <label for="street">Вулиця</label>
+                  <input class="input" type="text" name="street" id="street" placeholder="Почніть вводити назву" disabled autocomplete="off">
+                </div>
+                <div class="field is-locked">
+                  <label for="num">Будинок</label>
+                  <input class="input" type="text" name="num" id="num" placeholder="№" disabled autocomplete="off">
+                </div>
+                <div class="field">
+                  <button class="btn-primary" id="start_search" type="button" disabled>Показати графік</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="card">
+          <div class="side">
+            <h3>Як це працює</h3>
+            <p>Сайт показує графіки відключень по чергах та допомагає знайти вашу чергу за адресою.</p>
+            <div class="meta">
+              <span class="pill"><span class="region-dot" aria-hidden="true"></span> <span>Регіон: <b><%= regionTag %></b></span></span>
+              <span class="pill">Джерело: <b>off.energy.mk.ua</b></span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <span>Дані: <a href="https://off.energy.mk.ua" target="_blank" rel="noreferrer">off.energy.mk.ua</a></span>
+        <a href="/about.html">Контакти</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
